@@ -19,11 +19,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    newLayout();
+
     ui->comboBox->addItem("svmpcalcparm");
     ui->comboBox->addItem("ProcessNow");
     ui->comboBox->addItem("svhrrolavg");
-
-    newLayout();
+    ui->comboBox->addItem("svautosub");
 
     svcommand = new QString();
     *svcommand = "";
@@ -94,20 +95,31 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
         descriptionText = ProcessNowHelpText;
         descriptionLabel->setText(*ProcessNowHelpText);
     }
+    else if(arg1 == "ProcessNow" && ui->groupBox->layout() == layout_svautosub) {
+        deleteLayout_svautosub();
+        newLayout2();
 
-    if(arg1 == "svmpcalcparm" && ui->groupBox->layout() == layout2) {
-        deleteLayout2();
-        newLayout();
-
-        descriptionText = svmpcalcparmHelpText;
-        descriptionLabel->setText(*descriptionText);
+        descriptionText = ProcessNowHelpText;
+        descriptionLabel->setText(*ProcessNowHelpText);
     }
-    else if(arg1 == "svmpcalcparm" && ui->groupBox->layout() == layout_svhrrolavg) {
+
+    if(arg1 == "svmpcalcparm" && ui->groupBox->layout() == layout_svhrrolavg) {
         deleteLayout_svhrrolavg();
         newLayout();
 
         descriptionText = svmpcalcparmHelpText;
         descriptionLabel->setText(*descriptionText);
+    }
+    else if(arg1 == "svmpcalcparm" && ui->groupBox->layout() == layout_svautosub) {
+        deleteLayout_svautosub();
+        newLayout();
+
+        descriptionText = svmpcalcparmHelpText;
+        descriptionLabel->setText(*descriptionText);
+    }
+    else if(arg1 == "svmpcalcparm" && ui->groupBox->layout() == layout2) {
+        deleteLayout2();
+        newLayout();
     }
 
     if(arg1 == "svhrrolavg" && ui->groupBox->layout() == layout) {
@@ -117,6 +129,27 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
     else if(arg1 =="svhrrolavg" && ui->groupBox->layout() == layout2) {
         deleteLayout2();
         newLayout_svhrrolavg();
+    }
+    else if(arg1 == "svhrrolavg" && ui->groupBox->layout() == layout_svautosub) {
+        deleteLayout_svautosub();
+        newLayout_svhrrolavg();
+
+       //svhrrolavg description pending
+    }
+
+    if(arg1 == "svautosub" && ui->groupBox->layout() == layout) {
+        deleteLayout();
+        newLayout_svautosub();
+    }
+    else if(arg1 =="svautosub" && ui->groupBox->layout() == layout2) {
+        deleteLayout2();
+        newLayout_svautosub();
+    }
+    else if(arg1 == "svautosub" && ui->groupBox->layout() == layout_svhrrolavg) {
+        deleteLayout_svhrrolavg();
+        newLayout_svautosub();
+
+       //svautosub description pending
     }
 
 
@@ -186,6 +219,17 @@ void MainWindow::on_pushButton_clicked()
         fSwitchTextReplace();
 
         *svcommand = ui->comboBox->currentText() + " -d " + *startDateText + " -D " + *endDateText + " -t " + *tSwitchText + " -T " + *TSwitchText + " -f " + *fSwitchText;
+        }
+
+        else if(ui->comboBox->currentText() == "svautosub") {
+        siteTextReplace();
+        paramTextReplace();
+        endHourTextReplace();
+        endDateTextReplace();
+        startHourTextReplace();
+        startDateTextReplace();
+
+        *svcommand = ui->comboBox->currentText() + " -s " + *siteText + " -p " + *paramText + " -d " + *startDateText + " -D " + *endDateText + " -h " + *startHourText + " -H " + *endHourText;
         }
 
     cp->clear();
@@ -409,7 +453,7 @@ void MainWindow::newLayout2() {
     layout2->addWidget(fSwitchLineEdit,4,2);
 
     ui->groupBox->setLayout(layout2);
-    ui->groupBox_noEdit->setVisible(false);
+//    ui->groupBox_noEdit->setVisible(false);
 }
 
 void MainWindow::newLayout_svhrrolavg() {
@@ -484,6 +528,97 @@ void MainWindow::newLayout_svhrrolavg() {
     layout_svhrrolavg->addWidget(aSwitchLineEdit,6,2);
 
     ui->groupBox->setLayout(layout_svhrrolavg);
+}
+
+void MainWindow::newLayout_svautosub() {
+
+    layout_svautosub = new QGridLayout;
+    layout_svautosub_noEdit = new QGridLayout;
+
+    siteLabel = new QLabel("<site>");
+    paramLabel = new QLabel("<parameter>");
+    startDateLabel = new QLabel("<start date>");
+    endDateLabel = new QLabel("<end date>");
+    startHourLabel = new QLabel("<start hour>");
+    endHourLabel = new QLabel("<end hour>");
+    fSwitchLabel = new QLabel("<output filename>");
+    LSwitchLabel = new QLabel("<destination name>");
+
+
+    siteCheckBox = new QCheckBox("-s");
+    siteCheckBox->setChecked(true);
+    siteCheckBox->setEnabled(false);
+    paramCheckBox = new QCheckBox("-p");
+    paramCheckBox->setChecked(true);
+    paramCheckBox->setEnabled(false);
+    startDateCheckBox = new QCheckBox("-d");
+    startDateCheckBox->setChecked(true);
+    startDateCheckBox->setEnabled(false);
+    endDateCheckBox = new QCheckBox("-D");
+    endDateCheckBox->setChecked(true);
+    endDateCheckBox->setEnabled(false);
+    startHourCheckBox = new QCheckBox("-h");
+    startHourCheckBox->setChecked(true);
+    startHourCheckBox->setEnabled(false);
+    endHourCheckBox = new QCheckBox("-H");
+    endHourCheckBox->setChecked(true);
+    endHourCheckBox->setEnabled(false);
+    fSwitchCheckBox = new QCheckBox("-f");
+    LSwitchCheckBox = new QCheckBox("-L");
+
+
+    siteLineEdit = new QLineEdit();
+    siteLineEdit->setPlaceholderText("<ALL>");
+    paramLineEdit = new QLineEdit();
+    paramLineEdit->setPlaceholderText("<ALL>");
+    startDateLineEdit = new QLineEdit();
+    startDateLineEdit->setPlaceholderText("<mmddyy>");
+    endDateLineEdit = new QLineEdit();
+    endDateLineEdit->setPlaceholderText("<mmddyy>");
+    startHourLineEdit = new QLineEdit();
+    startHourLineEdit->setPlaceholderText("<hhmm>");
+    endHourLineEdit = new QLineEdit();
+    endHourLineEdit->setPlaceholderText("<hhmm>");
+    fSwitchLineEdit  = new QLineEdit();
+    fSwitchLineEdit->setPlaceholderText("debug.txt");
+    LSwitchLineEdit = new QLineEdit();
+    LSwitchLineEdit->setPlaceholderText("ColorRicoh");
+
+
+    nSwitchCheckBox = new QCheckBox("-n");
+    ISwitchCheckBox = new QCheckBox("-I");
+
+    layout_svautosub->addWidget(siteCheckBox,0,0);
+    layout_svautosub->addWidget(siteLabel,0,1);
+    layout_svautosub->addWidget(siteLineEdit,0,2);
+    layout_svautosub->addWidget(paramCheckBox,1,0);
+    layout_svautosub->addWidget(paramLabel,1,1);
+    layout_svautosub->addWidget(paramLineEdit,1,2);
+    layout_svautosub->addWidget(startDateCheckBox,2,0);
+    layout_svautosub->addWidget(startDateLabel,2,1);
+    layout_svautosub->addWidget(startDateLineEdit,2,2);
+    layout_svautosub->addWidget(endDateCheckBox,3,0);
+    layout_svautosub->addWidget(endDateLabel,3,1);
+    layout_svautosub->addWidget(endDateLineEdit,3,2);
+    layout_svautosub->addWidget(startHourCheckBox,4,0);
+    layout_svautosub->addWidget(startHourLabel,4,1);
+    layout_svautosub->addWidget(startHourLineEdit,4,2);
+    layout_svautosub->addWidget(endHourCheckBox,5,0);
+    layout_svautosub->addWidget(endHourLabel,5,1);
+    layout_svautosub->addWidget(endHourLineEdit,5,2);
+    layout_svautosub->addWidget(fSwitchCheckBox,6,0);
+    layout_svautosub->addWidget(fSwitchLabel,6,1);
+    layout_svautosub->addWidget(fSwitchLineEdit,6,2);
+    layout_svautosub->addWidget(LSwitchCheckBox,7,0);
+    layout_svautosub->addWidget(LSwitchLabel,7,1);
+    layout_svautosub->addWidget(LSwitchLineEdit,7,2);
+
+    layout_svautosub_noEdit->addWidget(nSwitchCheckBox,0,0);
+    layout_svautosub_noEdit->addWidget(ISwitchCheckBox,0,1);
+
+    ui->groupBox->setLayout(layout_svautosub);
+    ui->groupBox_noEdit->setLayout(layout_svautosub_noEdit);
+
 }
 
 void MainWindow::deleteLayout() {
@@ -590,6 +725,48 @@ void MainWindow::deleteLayout_svhrrolavg() {
 
 }
 
+void MainWindow::deleteLayout_svautosub() {
+
+    delete layout_svautosub;
+    delete layout_svautosub_noEdit;
+
+    delete siteCheckBox;
+    delete siteLabel;
+    delete siteLineEdit;
+
+    delete paramCheckBox;
+    delete paramLabel;
+    delete paramLineEdit;
+
+    delete startHourCheckBox;
+    delete startHourLabel;
+    delete startHourLineEdit;
+
+    delete endHourCheckBox;
+    delete endHourLabel;
+    delete endHourLineEdit;
+
+    delete startDateCheckBox;
+    delete startDateLabel;
+    delete startDateLineEdit;
+
+    delete endDateCheckBox;
+    delete endDateLabel;
+    delete endDateLineEdit;
+
+    delete fSwitchCheckBox;
+    delete fSwitchLabel;
+    delete fSwitchLineEdit;
+
+    delete LSwitchCheckBox;
+    delete LSwitchLabel;
+    delete LSwitchLineEdit;
+
+    delete nSwitchCheckBox;
+    delete ISwitchCheckBox;
+
+}
+
 // ------- END CUSTOM FUNCTIONS SECTION -------
 
 
@@ -682,7 +859,7 @@ void MainWindow::executeCommand() {
     command->start("C:\\Windows\\System32\\cmd.exe", QStringList() << "/C" << *svcommand);
 }
 
-    else {
+    else{
     QProcess *command = new QProcess();
     command->start("C:\\Windows\\System32\\cmd.exe", QStringList() << "/C" << *svcommand);
     }
@@ -748,7 +925,18 @@ void MainWindow::on_pushButton_Run_clicked()
     fSwitchTextReplace();
 
     *svcommand = ui->comboBox->currentText() + " -d " + *startDateText + " -D " + *endDateText + " -t " + *tSwitchText + " -T " + *TSwitchText + " -f " + *fSwitchText;
-}
+    }
+
+    else if(ui->comboBox->currentText() == "svautosub") {
+    siteTextReplace();
+    paramTextReplace();
+    endHourTextReplace();
+    endDateTextReplace();
+    startHourTextReplace();
+    startDateTextReplace();
+
+    *svcommand = ui->comboBox->currentText() + " -s " + *siteText + " -p " + *paramText + " -d " + *startDateText + " -D " + *endDateText + " -h " + *startHourText + " -H " + *endHourText;
+    }
 
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this,"Run the following command?",*svcommand,QMessageBox::Yes | QMessageBox::No);
