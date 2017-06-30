@@ -28,6 +28,8 @@ public:
     QGridLayout *descriptionLayout;
     QGridLayout *layout_svhrrolavg;
     QGridLayout *layout_svhrrolavg_noEdit;
+    QGridLayout *layout_svautosub;
+    QGridLayout *layout_svautosub_noEdit;
 
 
     QLabel *descriptionLabel;
@@ -43,6 +45,7 @@ public:
     QLabel *TSwitchLabel;
     QLabel *fSwitchLabel;
     QLabel *aSwitchLabel;
+    QLabel *LSwitchLabel;
 
     QCheckBox *siteCheckBox;
     QCheckBox *paramCheckBox;
@@ -63,6 +66,7 @@ public:
     QCheckBox *ISwitchCheckBox;
     QCheckBox *OSwitchCheckBox;
     QCheckBox *mSwitchCheckBox;
+    QCheckBox *nSwitchCheckBox;
 
     QLineEdit *siteLineEdit;
     QLineEdit *paramLineEdit;
@@ -76,6 +80,7 @@ public:
     QLineEdit *TSwitchLineEdit;
     QLineEdit *fSwitchLineEdit;
     QLineEdit *aSwitchLineEdit;
+    QLineEdit *LSwitchLineEdit;
 
     QString *siteText;
     QString *paramText;
@@ -110,12 +115,14 @@ private slots:
     void deleteLayout();
     void deleteLayout2();
     void deleteLayout_svhrrolavg();
+    void deleteLayout_svautosub();
 
     void newDescriptionLayout();
 
     void newLayout();
     void newLayout2();
     void newLayout_svhrrolavg();
+    void newLayout_svautosub();
 
     void svmpcalcparmHelp();
     void ProcessNowHelp();
